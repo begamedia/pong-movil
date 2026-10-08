@@ -2,7 +2,7 @@ const canvas = document.getElementById("lienzo");
 const ctx = canvas.getContext("2d");
 
 // variables globales equivalentes a tus atributos de java
-let estadoInicio = 0; 
+let estadoInicio = 0; // 0=menu, 2=juego, 3=fin
 let nivelCampaña = 1;
 let contadorRebotesRaqueta = 0;
 let cronometroLetreroNivel = 0;
@@ -78,7 +78,7 @@ function actualizar() {
         pelota.x += pelota.velX;
         pelota.y += pelota.velY;
 
-        // limites del techo y suelo corregidos para evitar bloqueos arriba de la o
+        // limites del techo y suelo reales
         if (pelota.y <= 0) {
             pelota.y = 0;
             pelota.velY = Math.abs(pelota.velY) * (enRevancha ? (0.8 + Math.random()*0.5) : 1);
@@ -135,15 +135,16 @@ function dibujar() {
     degradado.addColorStop(0, "#050a1e");
     degradado.addColorStop(0.50, "#050a1e"); 
     degradado.addColorStop(1, colorClaro);
+    
+    // CORREGIDO: eliminada la llamada erronea a g2d.setPaint para usar la sintaxis web real
     ctx.fillStyle = degradado;
     ctx.fillRect(0, 0, 800, 600);
 
-    // red divisoria sutil corregida sin la palabra int de java
+    // red divisoria sutil corregida sin int
     ctx.fillStyle = "rgba(255,255,255,0.15)";
     for (let i = 0; i < 600; i += 30) {
         ctx.fillRect(398, i, 4, 15);
     }
-
 
     // dibujo de raquetas y pelota fluorescente verde
     ctx.fillStyle = "#ffffff";
@@ -158,6 +159,7 @@ function dibujar() {
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 20px monospace";
 
+    // interfaz de pantallas dinamicas
     if (estadoInicio === 0) {
         ctx.fillStyle = "#00f0dc"; 
         ctx.font = "bold 64px monospace";
@@ -188,7 +190,6 @@ function dibujar() {
         ctx.fillText("JUGAR  " + txtNivel + " | 1 JUGADOR | TOQUES " + contadorRebotesRaqueta + " de 15", 180, 565);
     }
 
-    // pantallas de fin arcade corregidas en español e ingles
     if (estadoInicio === 3) {
         ctx.font = "bold 56px monospace";
         if (ganadorReal === 2) {
