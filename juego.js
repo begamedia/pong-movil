@@ -24,12 +24,13 @@ function reiniciarPelota(jugadorQueAnoto) {
     pelota.velY = (Math.random() > 0.5) ? base : -base;
 }
 
-// evalua la transicion continua de niveles al cumplir la meta
+// evalua la transicion continua de niveles al cumplir la meta de quince toques
 function evaluarTransicionContinua() {
     if (contadorRebotesRaqueta >= 15) {
         contadorRebotesRaqueta = 0;
         cronometroLetreroNivel = 100;
 
+        // corregido velocidades fijas y estables para evitar que el navegador se congele por aceleracion infinita
         if (nivelCampaña === 1) {
             nivelCampaña = 2;
             pelota.velX = (pelota.velX > 0) ? 5.5 : -5.5;
@@ -55,7 +56,6 @@ function evaluarTransicionContinua() {
 // bucle de fisica y logica del motor interactivo
 function actualizar() {
     if (estadoInicio === 0) {
-        // animacion suave de espera en el menu principal
         pelota.y += 0.5;
         if (pelota.y > 120) pelota.y = 110;
     }
@@ -107,17 +107,16 @@ function actualizar() {
             }
         }
 
-        // control de cronometro del texto flotante
         if (cronometroLetreroNivel > 0) cronometroLetreroNivel--;
 
         // control de goles y perdida de corazones
         if (pelota.x <= 0) {
-            marcador.j1++; // le quita vida a la maquina
+            marcador.j1++; 
             if (marcador.j1 >= 11) { estadoInicio = 3; ganadorReal = 2; }
             else reiniciarPelota(2);
         }
         if (pelota.x >= 772) {
-            marcador.j2++; // le quita vida al humano
+            marcador.j2++; 
             if (marcador.j2 >= 11) { estadoInicio = 3; ganadorReal = 1; }
             else reiniciarPelota(1);
         }
@@ -128,15 +127,14 @@ function actualizar() {
 function dibujar() {
     ctx.clearRect(0, 0, 800, 600);
 
-    // calculo del degradado invertido con la franja ochenta por ciento oscura
-    let colorClaro = "#822d02"; // naranja oscuro quemado nivel un base
-    if (nivelCampaña === 2) colorClaro = "#0f5014"; // verde oliva nivel dos
-    if (nivelCampaña === 3) colorClaro = "#3c0f5a"; // violeta quemado nivel tres
-    if (nivelCampaña === 4) colorClaro = "#6e0808"; // rojo sangre revancha
+    let colorClaro = "#822d02"; 
+    if (nivelCampaña === 2) colorClaro = "#0f5014"; 
+    if (nivelCampaña === 3) colorClaro = "#3c0f5a"; 
+    if (nivelCampaña === 4) colorClaro = "#6e0808"; 
 
     let degradado = ctx.createLinearGradient(0, 0, 0, 600);
     degradado.addColorStop(0, "#050a1e");
-    degradado.addColorStop(0.50, "#050a1e"); // mantiene el negro hasta la mitad suave
+    degradado.addColorStop(0.50, "#050a1e"); 
     degradado.addColorStop(1, colorClaro);
     ctx.fillStyle = degradado;
     ctx.fillRect(0, 0, 800, 600);
@@ -160,11 +158,11 @@ function dibujar() {
 
     // interfaz de pantallas dinamicas
     if (estadoInicio === 0) {
-        ctx.fillStyle = "#00f0dc"; // aguamarina
+        ctx.fillStyle = "#00f0dc"; 
         ctx.font = "bold 64px monospace";
-        ctx.fillText("PONG", 320, 140); // corregido texto limpio sin bloqueos
+        ctx.fillText("PONG", 320, 140); 
 
-        ctx.fillStyle = "#ffe600"; // amarillo activo
+        ctx.fillStyle = "#ffe600"; 
         ctx.strokeRect(300, 260, 200, 50);
         ctx.font = "bold 18px monospace";
         ctx.fillText("TOCA PARA JUGAR", 325, 292);
@@ -181,6 +179,13 @@ function dibujar() {
             if (nivelCampaña === 4) txt = "REVANCHA";
             ctx.fillText(txt, 280, 260);
         }
+
+        // corregido: añadida la orden oficial para pintar el letrero inferior osd de tracking en tiempo real
+        ctx.font = "16px monospace";
+        ctx.fillStyle = "#cbd5e1";
+        let txtNivel = "NIVEL " + nivelCampaña;
+        if (nivelCampaña === 4) txtNivel = "REVANCHA";
+        ctx.fillText("JUGAR  " + txtNivel + " | 1 JUGADOR | TOQUES " + contadorRebotesRaqueta + " de 15", 180, 545);
     }
 
     if (estadoInicio === 3) {
