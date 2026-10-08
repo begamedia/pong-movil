@@ -14,32 +14,39 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
     font-family: monospace;
 }
 
 #contenedor-juego {
     position: relative;
     width: 100vw;
-    height: 75vw; /* mantiene la proporcion de la ventana de java */
+    height: 100vh;
     max-width: 800px;
     max-height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 canvas {
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100vh; /* obliga al juego a encajar estrictamente en el alto del celular de lado */
+    object-fit: contain;
     display: block;
     box-shadow: 0 0 20px rgba(0,0,0,0.8);
 }
 
-/* divide la pantalla en dos zonas tactiles transparentes para el pulgar derecho */
+/* mandos tactiles invisibles mapeados en los costados derechos */
 .boton-tactil {
     position: absolute;
     right: 0;
-    width: 30%; /* zona de control del pulgar */
+    width: 25%; 
     height: 50%;
     z-index: 10;
-    background-color: rgba(255, 255, 255, 0.0); /* completamente invisible en UX */
+    background-color: rgba(255, 255, 255, 0.0); 
 }
 
 #btn-arriba {
