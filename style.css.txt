@@ -1,0 +1,51 @@
+/* reinicia los margenes para usar toda la pantalla movil */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    background-color: #050a1e;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: monospace;
+}
+
+#contenedor-juego {
+    position: relative;
+    width: 100vw;
+    height: 75vw; /* mantiene la proporcion de la ventana de java */
+    max-width: 800px;
+    max-height: 600px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* divide la pantalla en dos zonas tactiles transparentes para el pulgar derecho */
+.boton-tactil {
+    position: absolute;
+    right: 0;
+    width: 30%; /* zona de control del pulgar */
+    height: 50%;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.0); /* completamente invisible en UX */
+}
+
+#btn-arriba {
+    top: 0;
+}
+
+#btn-abajo {
+    bottom: 0;
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- evita que el celular haga zoom raro al presionar la pantalla -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pong Archive Movil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="contenedor-juego">
+        <!-- lienzo grafico equivalente al campodejuego de java -->
+        <canvas id="lienzo" width="800" height="600"></canvas>
+        
+        <!-- botones tactiles transparentes para controlar con los pulgares -->
+        <div id="btn-arriba" class="boton-tactil"></div>
+        <div id="btn-abajo" class="boton-tactil"></div>
+    </div>
+
+    <script src="juego.js"></script>
+</body>
+</html>
