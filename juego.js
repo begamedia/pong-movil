@@ -2,7 +2,7 @@ const canvas = document.getElementById("lienzo");
 const ctx = canvas.getContext("2d");
 
 // variables globales equivalentes a tus atributos de java
-let estadoInicio = 0; // 0=menu, 2=juego, 3=fin
+let estadoInicio = 0; 
 let nivelCampaña = 1;
 let contadorRebotesRaqueta = 0;
 let cronometroLetreroNivel = 0;
@@ -10,7 +10,7 @@ let ganadorReal = 1;
 let enRevancha = false;
 
 // estructuras de los objetos del juego
-let pelota = { x: 368, y: 110, tam: 28, velX: 0, velY: 0, cayendo: false };
+let pelota = { x: 368, y: 110, tam: 28, velX: 0, velY: 0 };
 let jugador1 = { x: 30, y: 240, ancho: 18, alto: 120, velY: 0 }; // maquina
 let jugador2 = { x: 752, y: 240, ancho: 18, alto: 120, velY: 0 }; // humano
 let marcador = { j1: 0, j2: 0 };
@@ -30,7 +30,6 @@ function evaluarTransicionContinua() {
         contadorRebotesRaqueta = 0;
         cronometroLetreroNivel = 100;
 
-        // corregido velocidades fijas y estables para evitar que el navegador se congele por aceleracion infinita
         if (nivelCampaña === 1) {
             nivelCampaña = 2;
             pelota.velX = (pelota.velX > 0) ? 5.5 : -5.5;
@@ -63,8 +62,8 @@ function actualizar() {
     if (estadoInicio === 2) {
         // movimiento de paleta del humano jugador dos derecho
         jugador2.y += jugador2.velY;
-        if (jugador2.y < 60) jugador2.y = 60;
-        if (jugador2.y + jugador2.alto > 540) jugador2.y = 540 - jugador2.alto;
+        if (jugador2.y < 0) jugador2.y = 0;
+        if (jugador2.y + jugador2.alto > 600) jugador2.y = 600 - jugador2.alto;
 
         // ia humana balanceada para el jugador uno maquina izquierda
         if (pelota.x < 400) {
@@ -72,20 +71,20 @@ function actualizar() {
             if (pelota.y > centroRaqueta + 15) jugador1.y += 5;
             else if (pelota.y < centroRaqueta - 15) jugador1.y -= 5;
         }
-        if (jugador1.y < 60) jugador1.y = 60;
-        if (jugador1.y + jugador1.alto > 540) jugador1.y = 540 - jugador1.alto;
+        if (jugador1.y < 0) jugador1.y = 0;
+        if (jugador1.y + jugador1.alto > 600) jugador1.y = 600 - jugador1.alto;
 
         // movimiento de la pelota
         pelota.x += pelota.velX;
         pelota.y += pelota.velY;
 
-        // rebotes contra el techo y suelo aplicando desvios locos si esta en revancha
-        if (pelota.y <= 60) {
-            pelota.y = 60;
+        // limites del techo y suelo corregidos para evitar bloqueos arriba de la o
+        if (pelota.y <= 0) {
+            pelota.y = 0;
             pelota.velY = Math.abs(pelota.velY) * (enRevancha ? (0.8 + Math.random()*0.5) : 1);
         }
-        if (pelota.y >= 512) {
-            pelota.y = 512;
+        if (pelota.y >= 572) {
+            pelota.y = 572;
             pelota.velY = -Math.abs(pelota.velY) * (enRevancha ? (0.8 + Math.random()*0.5) : 1);
         }
 
@@ -139,9 +138,8 @@ function dibujar() {
     ctx.fillStyle = degradado;
     ctx.fillRect(0, 0, 800, 600);
 
-    // red divisoria sutil
     ctx.fillStyle = "rgba(255,255,255,0.15)";
-    for (let i = 60; i < 600; i += 30) ctx.fillRect(398, i, 4, 15);
+    for (int i = 0; i < 600; i += 30) ctx.fillRect(398, i, 4, 15);
 
     // dibujo de raquetas y pelota fluorescente verde
     ctx.fillStyle = "#ffffff";
@@ -156,7 +154,6 @@ function dibujar() {
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 20px monospace";
 
-    // interfaz de pantallas dinamicas
     if (estadoInicio === 0) {
         ctx.fillStyle = "#00f0dc"; 
         ctx.font = "bold 64px monospace";
@@ -180,20 +177,24 @@ function dibujar() {
             ctx.fillText(txt, 280, 260);
         }
 
-        // corregido: añadida la orden oficial para pintar el letrero inferior osd de tracking en tiempo real
         ctx.font = "16px monospace";
         ctx.fillStyle = "#cbd5e1";
         let txtNivel = "NIVEL " + nivelCampaña;
         if (nivelCampaña === 4) txtNivel = "REVANCHA";
-        ctx.fillText("JUGAR  " + txtNivel + " | 1 JUGADOR | TOQUES " + contadorRebotesRaqueta + " de 15", 180, 545);
+        ctx.fillText("JUGAR  " + txtNivel + " | 1 JUGADOR | TOQUES " + contadorRebotesRaqueta + " de 15", 180, 565);
     }
 
+    // pantallas de fin arcade corregidas en español e ingles
     if (estadoInicio === 3) {
-        ctx.font = "bold 42px monospace";
-        ctx.fillStyle = (ganadorReal === 2) ? "#32ff32" : "#ff0000";
-        let txtFin = (ganadorReal === 2) ? "HUMANO GANADOR" : "MAQUINA GANADORA";
-        ctx.fillText(txtFin, 200, 240);
-        ctx.font = "16px monospace";
+        ctx.font = "bold 56px monospace";
+        if (ganadorReal === 2) {
+            ctx.fillStyle = "#32ff32";
+            ctx.fillText("VICTORIA", 270, 240);
+        } else {
+            ctx.fillStyle = "#ff0000";
+            ctx.fillText("GAME OVER", 250, 240);
+        }
+        ctx.font = "18px monospace";
         ctx.fillStyle = "#ffe600";
         ctx.fillText("TOCA PARA REINICIAR", 290, 320);
     }
