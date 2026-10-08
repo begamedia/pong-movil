@@ -138,8 +138,12 @@ function dibujar() {
     ctx.fillStyle = degradado;
     ctx.fillRect(0, 0, 800, 600);
 
+    // red divisoria sutil corregida sin la palabra int de java
     ctx.fillStyle = "rgba(255,255,255,0.15)";
-    for (int i = 0; i < 600; i += 30) ctx.fillRect(398, i, 4, 15);
+    for (let i = 0; i < 600; i += 30) {
+        ctx.fillRect(398, i, 4, 15);
+    }
+
 
     // dibujo de raquetas y pelota fluorescente verde
     ctx.fillStyle = "#ffffff";
